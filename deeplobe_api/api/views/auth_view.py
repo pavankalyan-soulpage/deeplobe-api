@@ -233,4 +233,23 @@ class ForgotPasswordView(APIView):
         else:
             return Response({"error": "Email required"}, status=status.HTTP_400_BAD_REQUEST) 
 
+class ForgotPasswordConfirmView(APIView):
+    def post(self, request):
+        
+        token = request.data.get("token", None)
+        password1 = request.data.get("password1", None)
+        password2 = request.data.get("password2", None)
+        if (token != None) and (password1 != None) and (password2 != None):
+            try: 
+                user = User.objects.get(token=token, token_status=True)
+            
+                user.set_password(password1)
+                user.token_status = False
+                user.save()
+                return Response({"message": "New password set"}, status=status.HTTP_200_OK)  
 
+            except Exception as e:
+                print(e)
+                return Response({"error": "token expired"}, status=status.HTTP_400_BAD_REQUEST)  
+        else:
+            return Response({"error": "Can't be null passwords and token"}, status=status.HTTP_400_BAD_REQUEST)  
