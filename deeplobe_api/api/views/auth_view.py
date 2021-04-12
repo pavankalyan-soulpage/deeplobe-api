@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
 from rest_framework.response import Response
 from rest_framework import status
-from allauth.account.views import PasswordResetView, PasswordSetView
+from ...bgtasks import mail_sending
 
 from ...db.models import SocialProvider
 from ...db.models import User
@@ -110,7 +110,7 @@ class SocialAuthView(LoginDetailMixin, APIView):
                     data = payload_generate(self, user)
 
                     self.social_provider_auth(user, provider, extra)
-                    return Response({}, status=status.HTTP_201_CREATED)
+                    return Response(data, status=status.HTTP_201_CREATED)
             else:
                 return Response({"error": "Missing fields"}, status=status.HTTP_400_BAD_REQUEST) 
 
@@ -183,76 +183,54 @@ class EmailAuthView(LoginDetailMixin, APIView):
             else:
                return Response({"error": "Missing fields"}, status=status.HTTP_400_BAD_REQUEST) 
 
+class ForgotPasswordView(APIView):
+    def post(self, request):
+        
+        email = request.data.get("email", None)
+        if email != None:
+            try: 
+                user = User.objects.get(email=email)
+            
+                token = uuid.uuid4()
+                user.token = token
+                user.token_status = True
+                user.save()
+
+                subject = "Reset Your Password"
+                body = """
+                <div style="height:100%;margin:0;padding:0;width:100%;background-color:#fafafa">
+                <center>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="border-collapse:collapse;height:100%;margin:0;padding:0;width:100%;background-color:#fafafa">
+                <tbody><tr>
+                <td align="center" style="height:100%;margin:0;padding:10px;width:100%;border-top:0">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;border:0;max-width:600px!important">
+                <tbody>
+                <tr>
+                <td style="background:#ffffff none no-repeat center/cover;background-color:#ffffff;background-image:none;background-repeat:no-repeat;background-position:center;background-size:cover;border-top:0;border-bottom:2px solid #eaeaea;padding:9px 18px;">
+                <div style="padding:20px 18px 25px;text-align:center;width:100%">
+                </div>
+                <h1 style="display:block;margin:0;padding:0;color:#202020;font-family:Helvetica;font-size:26px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:normal;text-align:left">Hello {username},
+                </h1><br>
+                <p style="margin:10px 0;padding:0;color:#202020;font-family:Helvetica;font-size:16px;line-height:150%;text-align:left">
+                Someone request to reset password!</p><br>
+                <a href="https://frappy-cms.vercel.app/password_reset/token/{token}/">https://frappy-cms.vercel.app/password_reset/token/{token}/</a>
+                <p>Thanks From Deeplobe Team,</p>
+                </tbody>
+                </table>
+                </td>
+                </tr>
+                </tbody></table>
+                </center>
+                </div>""".format(
+                username=user.username, token=token)
+
+                mail_sending(email, subject, body)
+                return Response({"message": "Email sent"}, status=status.HTTP_200_OK) 
+            except Exception as e:
+                print(e)
+                return Response({"error": "Email not present in database"}, status=status.HTTP_400_BAD_REQUEST) 
+
+        else:
+            return Response({"error": "Email required"}, status=status.HTTP_400_BAD_REQUEST) 
 
 
-
-
-
-# class APIPasswordResetView(PasswordResetView):
-#     @method_decorator(csrf_exempt)
-#     def dispatch(self, request, *args, **kwargs):
-
-#         return super(APIPasswordResetView, self).dispatch(request, *args, **kwargs)
-
-
-# class ForgotPassword(APIView):
-#     def post(self, request):
-#         str_data = json.dumps(request.data)
-#         payload = json.loads(str_data)
-#         email = payload.get("email", False)
-
-#         # First create a post request to pass to the view
-#         request = HttpRequest()
-#         request.method = "POST"
-
-#         # add the absolute url to be be included in email
-#         if settings.DEBUG:
-#             request.META["HTTP_HOST"] = "127.0.0.1:8000"
-#         else:
-
-#             request.META["HTTP_HOST"] = "fashopi-staging.herokuapp.com"
-#         # pass the post form data
-#         request.POST = {"email": email}
-
-#         try:
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             user = False
-#         if email and user:
-#             APIPasswordResetView.as_view()(request)
-#             return Response({"message": "sent"}, status=201)
-#         else:
-#             return Response({"message": "failed"}, status=200)
-
-
-# class APIPasswordsetView(PasswordSetView):
-#     @method_decorator(csrf_exempt)
-#     def dispatch(self, request, *args, **kwargs):
-
-#         return super(APIPasswordsetView, self).dispatch(request, *args, **kwargs)
-
-
-# class PasswordSet(APIView):
-#         def post(self, request):
-#             str_data = json.dumps(request.data)
-#             payload = json.loads(str_data)
-#             password1 = payload.get("password1", False)
-#             password2 = payload.get("password2", False)
-
-
-#             # First create a post request to pass to the view
-#             request = HttpRequest()
-#             request.method = "POST"
-#             if settings.DEBUG:
-#                 request.META["HTTP_HOST"] = "127.0.0.1:8000"
-#             else:
-#                 request.META["HTTP_HOST"] = "fashopi-staging.herokuapp.com"
-
-#             request.POST = {"password1": password1, "password2": password2}
-
-#             # request.META["user"]= old_request.user
-#             if password1 == password2:
-#                     APIPasswordsetView.as_view()(request)
-#                     return Response({"message": "sent"}, status=201)
-#             else:
-#                     return Response({"message": "failed"}, status=200)

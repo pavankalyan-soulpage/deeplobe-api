@@ -1,1 +1,1 @@
-from .auth_view import SocialAuthView, EmailAuthView
+from .auth_view import SocialAuthView, EmailAuthView, ForgotPasswordView
