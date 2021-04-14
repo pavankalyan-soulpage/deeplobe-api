@@ -118,7 +118,7 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
 
 # Media Settings
-MEDIA_ROOT = 'mediafiles'
+# MEDIA_ROOT = 'mediafiles'
 MEDIA_URL = '/media/'
 
 
@@ -173,3 +173,14 @@ EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# # The AWS region to connect to.
+# AWS_REGION = "ap-south-1"
+# # The AWS access key to use.
+# AWS_ACCESS_KEY_ID = "AKIA4BKVSTFBINQ6FOFK"
+# # The AWS secret access key to use.
+# AWS_SECRET_ACCESS_KEY = "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"
+# # The name of the bucket to store files in.
+# AWS_S3_BUCKET_NAME = "deeplobe"
+# DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
+# AWS_S3_BUCKET_AUTH = False
