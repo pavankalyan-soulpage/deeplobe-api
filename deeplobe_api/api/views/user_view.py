@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from ..serializers import UserSerializer
 from ...db.models import User
+from django.http import Http404
 
 
 class UserView(APIView):
@@ -28,7 +29,7 @@ class UserDetail(APIView):
     Retrieve, delete a user
     """
 
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         """
