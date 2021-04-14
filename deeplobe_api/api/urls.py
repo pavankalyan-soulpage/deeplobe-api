@@ -1,7 +1,8 @@
 from django.urls import path
 
 # Create your urls here.
-from .views import EmailAuthView, SocialAuthView, ForgotPasswordView, ForgotPasswordConfirmView, ClassificationImageUpload
+from .views import EmailAuthView, SocialAuthView, ForgotPasswordView, ForgotPasswordConfirmView, ClassificationImageUpload, UserCreate, UserDetail
+
 
 
 urlpatterns = [
@@ -10,5 +11,7 @@ urlpatterns = [
     path("forgot-password/", ForgotPasswordView.as_view(), name="forgot_password"),
     path("password-confirm/", ForgotPasswordConfirmView.as_view(), name="confirm_password"),
     path("classification-upload/", ClassificationImageUpload.as_view(), name="classification_upload"),
+    path("users/", UserCreate.as_view(), name="create"),
+    path("users/<int:pk>/", UserDetail.as_view(), name="retreive user"),
 
 ]
