@@ -2,7 +2,7 @@
 
 from __future__ import absolute_import
 
-from .common import * # noqa
+from .common import *  # noqa
 
 DEBUG = True
 
@@ -10,32 +10,28 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "deeplobe_api",
-        'USER': "",
-        'PASSWORD': "",
-        'HOST': "",
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "deeplobe",
+        "USER": "postgres",
+        "PASSWORD": "deeplobe",
+        "HOST": "127.0.0.1",
     }
 }
 
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
 
-INSTALLED_APPS += (
-    'debug_toolbar',
-)
+INSTALLED_APPS += ("debug_toolbar",)
 
-MIDDLEWARE += (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-INTERNAL_IPS = ('127.0.0.1',)
+INTERNAL_IPS = ("127.0.0.1",)
 
 CORS_ORIGIN_ALLOW_ALL = True
