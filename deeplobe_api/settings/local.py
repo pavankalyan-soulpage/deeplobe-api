@@ -12,12 +12,13 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "deeplobe_api",
-        "USER": "",
-        "PASSWORD": "",
-        "HOST": "",
+        "NAME": "deeplobe",
+        "USER": "postgres",
+        "PASSWORD": "deeplobe",
+        "HOST": "127.0.0.1",
     }
 }
+
 
 CACHES = {
     "default": {

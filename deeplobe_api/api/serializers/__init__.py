@@ -1,4 +1,3 @@
 from .user_serializer import UserSerializer
 from .task_serializer import TaskSerializer
 from .task_status_serializer import TaskStatusSerializer
-from .file_asset_serializer import FileAssetSerializer
