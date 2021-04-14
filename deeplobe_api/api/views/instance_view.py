@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
-class ClassificationImageUpload(APIView):
+
+class InstanceImageUpload(APIView):
 
     def post(self, request, category_name):
         
@@ -15,9 +16,9 @@ class ClassificationImageUpload(APIView):
             im1 = Image.open(x) 
             
             # save a image using extension
-            if not os.path.isdir(os.path.join("deeplobe_ai", "Datasets", "classification", category_name)):
-                    os.makedirs(os.path.join("deeplobe_ai", "Datasets", "classification", category_name))
-            im1 = im1.save(f"deeplobe_ai/Datasets/classification/{category_name}/{x}")
+            if not os.path.isdir(os.path.join("deeplobe_ai", "Datasets", "Instance", category_name)):
+                    os.makedirs(os.path.join("deeplobe_ai", "Datasets", "Instance", category_name))
+            im1 = im1.save(f"deeplobe_ai/Datasets/Instance/{category_name}/{x}")
     
 
         return Response({"msg": "Uploded successfully"}, status=status.HTTP_200_OK)
